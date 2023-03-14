@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Bucket-List{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="icon" href="{{ asset('img/favicon.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<body>
+<div class="container">
+    <header>
+        <img src="{{ asset('img/logo.png') }}" alt="logo"> Bucket list
+        <nav>
+            <ul>
+                <li><a href="{{ path('main_index') }}">Main</a></li>
+                <li><a href="{{ path('main_aboutus') }}">About Us</a></li>
+                <li><a href="{{ path('wish_affichageList') }}">List</a></li>
+                <li><a href="{{ path('wish_affichageDetail') }}">Detail</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block body %}{% endblock %}
+    </main>
+    <footer>
+        &copy; {{ 'now' | date('Y') }} Bucket List
+    </footer>
+</div>
+</body>
+</html>
