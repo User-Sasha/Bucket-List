@@ -10,7 +10,8 @@ class MainController extends AbstractController
 {
     #[Route(
         '/',
-        name: 'main_index'
+        name: 'main_index',
+        methods: 'GET'
     )]
     public function index(): Response
     {
@@ -19,10 +20,11 @@ class MainController extends AbstractController
 
 
     #[Route(
-        '/aboutUs',
-        name: 'main_aboutus'
+        '/aboutus',
+        name: 'main_aboutus',
+        methods: 'GET'
     )]
-    public function AboutUs(): Response
+    public function aboutUs(): Response
     {
         return $this->render('main/aboutus.html.twig');
     }

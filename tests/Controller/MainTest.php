@@ -16,7 +16,7 @@ class MainTest extends WebTestCase
         // Je vérifie qu'il y a bien une et une seule balise <nav>
         $this->assertSelectorExists('nav');
         // Je vérifie que dans cette barre de nav, j'ai un seul lien
-        $this->assertCount(1, $crawler->filter('nav a'));
+        $this->assertCount(3, $crawler->filter('nav a'));
         // Je vérifie que la balise <body> contient le mot "Lorem"
         $this->assertSelectorTextContains('body', 'Lorem');
     }
