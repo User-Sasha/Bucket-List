@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  bdd:
+    container_name: BucketListBDD
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Password
+      MYSQL_DATABASE: bucketlistdb
+    expose:
+      - "3306"
+    ports:
+      - "3307:3306"
+    volumes:
+      - data-bdd:/var/lib/mysql
+volumes:
+  data-bdd:

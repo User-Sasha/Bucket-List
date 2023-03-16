@@ -1,7 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <p>
-        <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci alias amet beatae commodi cumque dicta, dolores ea, impedit ipsum maiores, molestiae perferendis qui quod quos reprehenderit rerum sapiente ut velit.</span><span>A amet nam reiciendis! Adipisci aperiam nam nostrum? Animi asperiores at autem consectetur dignissimos eius et facere, id ipsam iure, labore laudantium maxime nam nihil ratione recusandae repellendus. Accusantium, ea!</span>
-    </p>
+    <section class="team-members">
+        {% for chaqueMembre in team %}
+        <article>
+            <img src="{{ chaqueMembre.picture }}" alt="">
+            <div>
+                <h3>
+                    {{ chaqueMembre.firstname }} {{ chaqueMembre.lastname }}
+                    {{ chaqueMembre.lastname == "Potencier" ? "&#128151" : "" }}
+                </h3>
+            </div>
+        </article>
+        {% endfor %}
+    </section>
 {% endblock %}

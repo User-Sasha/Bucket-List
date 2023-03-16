@@ -24,8 +24,13 @@ class MainController extends AbstractController
         name: 'main_aboutus',
         methods: 'GET'
     )]
-    public function aboutUs(): Response
+    public function aboutus(): Response
     {
-        return $this->render('main/aboutus.html.twig');
+        $fichier = file_get_contents(__DIR__.'/../../data/team.json');
+        $team = json_decode($fichier, true);
+        return $this->render(
+            'main/aboutus.html.twig',
+            compact('team')
+        );
     }
 }

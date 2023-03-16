@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Wish;
+use App\Repository\WishRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,23 +12,34 @@ class WishController extends AbstractController
 {
     #[Route(
         '/list',
-        name: '_affichageList',
+        name: '_List',
         methods: 'GET'
     )]
-    public function affichageList(): Response
+    public function List(
+        WishRepository $wishRepository
+    ): Response
     {
-        return $this->render('wish/list.html.twig');
+        $wishes = $wishRepository->findBy(
+            ["isPublished" => true]
+        );
+        return $this->render('wish/list.html.twig',
+            compact('wishes')
+        );
     }
 
     #[Route(
-        '/detail/{id}',
-        name: '_affichageDetail',
-        requirements: ['id'=>'\d+']
+        '/detail/{wish}',
+        name: '_Detail'
     )]
-    public function affichageDetail($id): Response
+    public function Detail(
+        Wish $wish
+    ): Response
     {
+        if (!$wish) {
+            throw $this->createNotFoundException('Ce wish n\'existe pas.');
+        }
         return $this->render('wish/detail.html.twig',
-        compact('id')
+        compact('wish')
         );
     }
 }
