@@ -16,26 +16,26 @@ class WishController extends AbstractController
 {
 
     #[Route(
-        '/supprimer/{id}',
+        '/supprimer/{wish}',
         name: '_supprimer',
         methods: 'GET'
     )]
     public function supprimer(
-        Wish $id,
+        Wish $wish,
         EntityManagerInterface $entityManager
     ): Response
     {
-        $entityManager->remove($id);
+        $entityManager->remove($wish);
         $entityManager->flush();
-        return $this->redirectToRoute('wish_List');
+        return $this->redirectToRoute('wish_list');
     }
 
     #[Route(
         '/list',
-        name: '_List',
+        name: '_list',
         methods: 'GET'
     )]
-    public function List(
+    public function list(
         WishRepository $wishRepository
     ): Response
     {
@@ -48,10 +48,10 @@ class WishController extends AbstractController
     }
     #[Route(
         '/detail/{wish}',
-        name: '_Detail',
+        name: '_detail',
         methods: 'GET'
     )]
-    public function Detail(
+    public function detail(
         Wish $wish
     ): Response
     {
@@ -65,10 +65,10 @@ class WishController extends AbstractController
 
     #[Route(
         '/ajouter',
-        name: '_ajouterwish',
+        name: '_ajouter',
         methods: ['GET', 'POST']
     )]
-    public function ajouterWish(
+    public function ajouter(
         Request                $request,
         EntityManagerInterface $entityManager
     ): Response
@@ -85,15 +85,38 @@ class WishController extends AbstractController
                 $entityManager->persist($wish);
                 $entityManager->flush();
                 $this->addFlash('succes','Le souhait a bien été inséré');
-                return $this->redirectToRoute('wish_List');
+                return $this->redirectToRoute('wish_list');
 
             } catch (\Exception $exception) {
                 $this->addFlash('echec','Le souhait n\'a pas été inséré');
-                return $this->redirectToRoute('wish_ajouterwish');
+                return $this->redirectToRoute('wish_ajouter');
             }
         }
 
-        return $this->render('ajouterwish.html.twig',
+        return $this->render('ajouter.html.twig',
+            compact('wishForm')
+        );
+    }
+
+    #[Route(
+        '/modifier/{wish}',
+        name: '_modifier',
+        methods: 'GET'
+    )]
+    public function modifier(
+        Wish $wish,
+        EntityManagerInterface $entityManager,
+        Request $request
+    ): Response
+    {
+        $wishForm = $this->createForm(WishType::class, $wish);
+        $wishForm->handleRequest($request);
+        if($wishForm->isSubmitted() && $wishForm->isValid()) {
+            $entityManager->persist($wish);
+            $entityManager->flush();
+            return $this->redirectToRoute('wish_list');
+        }
+        return $this->render('wish/modifier.html.twig',
             compact('wishForm')
         );
     }

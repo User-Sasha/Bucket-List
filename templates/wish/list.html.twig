@@ -5,8 +5,9 @@
         <h2>Tous les souhaits</h2>
         {% for wish in wishes %}
             <article>
-                <a href="{{ path('wish_Detail', {'wish': wish.id}) }}">{{ wish.title }}</a>
-                <a href="{{ path('wish_supprimer', {'id': wish.id}) }}">Supprimer</a>
+                <a href="{{ path('wish_detail', {'wish': wish.id}) }}">{{ wish.title }}</a>
+                <a href="{{ path('wish_modifier', {'wish': wish.id}) }}">Modifier</a>
+                <a href="{{ path('wish_supprimer', {'wish': wish.id}) }}">Supprimer</a>
             </article>
         {% endfor %}
     </section>
