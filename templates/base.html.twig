@@ -23,9 +23,17 @@
         <nav>
             <ul>
                 <li><a href="{{ path('main_index') }}">Main</a></li>
-                <li><a href="{{ path('wish_list') }}">List</a></li>
-                <li><a href="{{ path('wish_ajouter') }}">Ajout un souhait</a></li>
+                <li><a href="{{ path('wish_list') }}">Tous les souhaits</a></li>
                 <li><a href="{{ path('main_aboutus') }}">About Us</a></li>
+                {% if not app.user %}
+                    <li><a href="{{ path('app_login') }}">Se connecter</a> </li>
+                    <li><a href="{{ path('app_register') }}">S'enregistrer</a> </li>
+                {% endif %}
+                {% if app.user %}
+                    <li>Hello {{ app.user.username }} !</li>
+                    <li><a href="{{ path('wish_ajouter') }}">Ajout un souhait</a></li>
+                    <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>

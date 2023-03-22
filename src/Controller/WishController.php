@@ -2,15 +2,20 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Wish;
 use App\Form\WishType;
+use App\Repository\UserRepository;
 use App\Repository\WishRepository;
+use App\Services\Censurator;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpParser\Node\Stmt\TryCatch;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 #[Route('/wish', name: 'wish', methods: 'GET')] // Prefixe
 class WishController extends AbstractController
 {
@@ -30,17 +35,23 @@ class WishController extends AbstractController
         return $this->redirectToRoute('wish_list');
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route(
         '/list',
         name: '_list',
         methods: 'GET'
     )]
     public function list(
-        WishRepository $wishRepository
+        WishRepository $wishRepository,
+        UserRepository $userRepository
     ): Response
     {
+        //Methode 1
         $wishes = $wishRepository->findBy(
-            ["isPublished" => true]
+            [
+                "isPublished" => true,
+                "author" => $this->getUser()
+            ]
         );
         return $this->render('wish/list.html.twig',
             compact('wishes')
@@ -63,6 +74,7 @@ class WishController extends AbstractController
         );
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route(
         '/ajouter',
         name: '_ajouter',
@@ -70,18 +82,22 @@ class WishController extends AbstractController
     )]
     public function ajouter(
         Request                $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        Censurator $censurator
     ): Response
     {
         $wish = new Wish();
         $wishForm = $this->createForm(WishType::class, $wish);
-
         $wishForm->handleRequest($request);
-
         if ($wishForm->isSubmitted() && $wishForm->isValid()) {
             try {
                 $wish->setDateCreated(new \DateTime());
                 $wish->setIsPublished(true);
+                $wish->setAuthor($this->getUser());
+
+                $wish->setTitle($censurator->purify($wish->getTitle()));
+                $wish->setDescription($censurator->purify($wish->getDescription()));
+
                 $entityManager->persist($wish);
                 $entityManager->flush();
                 $this->addFlash('succes','Le souhait a bien été inséré');
@@ -98,6 +114,7 @@ class WishController extends AbstractController
         );
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route(
         '/modifier/{wish}',
         name: '_modifier',

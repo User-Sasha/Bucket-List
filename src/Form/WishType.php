@@ -16,7 +16,6 @@ class WishType extends AbstractType
         $builder
             ->add('title')
             ->add('description')
-            ->add('author')
             ->add('category', EntityType::class,
             [
                 'class' => Category::class,
